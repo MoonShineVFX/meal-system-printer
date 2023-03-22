@@ -5,13 +5,19 @@ from datetime import datetime
 
 WIDTH = 320
 HEIGHT = 240
+
 GLOBAL_PADDING = 10
+
 ORDER_PADDING = 5
 TITLE_HEIGHT = 45
-DATE_HEIGHT = 15
+
+META_HEIGHT = 25
+META_PADDING = 5
+DATE_HEIGHT = 18
+USER_HEIGHT = 22
+
 NAME_HEIGHT = 45
 OPTIONS_HEIGHT = 25
-USER_HEIGHT = 18
 
 
 class Label:
@@ -32,7 +38,7 @@ class Label:
             "fonts/NotoSansTC-Regular.otf", OPTIONS_HEIGHT
         )
         self._font_user = ImageFont.truetype(
-            "fonts/NotoSansTC-Regular.otf", USER_HEIGHT
+            "fonts/NotoSansTC-Regular.otf", DATE_HEIGHT
         )
 
     def make(
@@ -93,26 +99,51 @@ class Label:
             fill=0,
         )
 
-        # [Date]
-        cursorY += TITLE_HEIGHT + 5
+        # [Meta]
+        # Date
+        cursorY += TITLE_HEIGHT
         date_text = date.strftime("%Y-%m-%d %H:%M:%S")
         dtb = self._font_date.getbbox(date_text)
-        dt_w = dtb[2] - dtb[0]
         dt_h = dtb[3] - dtb[1]
         dt_x = dtb[0]
         dt_y = dtb[1]
         draw.text(
             (
-                GLOBAL_PADDING - dt_x,
-                cursorY - dt_y + DATE_HEIGHT / 2 - dt_h / 2,
+                GLOBAL_PADDING + META_PADDING - dt_x,
+                cursorY - dt_y + META_HEIGHT / 2 - dt_h / 2,
             ),
             date_text,
             font=self._font_date,
             fill=0,
         )
 
+        # [User]
+        utb = self._font_user.getbbox(user)
+        ut_w = utb[2] - utb[0]
+        ut_h = utb[3] - utb[1]
+        ut_x = utb[0]
+        ut_y = utb[1]
+        draw.text(
+            (
+                WIDTH - GLOBAL_PADDING - META_PADDING - ut_x - ut_w,
+                cursorY - ut_y + META_HEIGHT / 2 - ut_h / 2,
+            ),
+            user,
+            font=self._font_user,
+            fill=0,
+        )
+        draw.rectangle(
+            (
+                GLOBAL_PADDING,
+                cursorY,
+                WIDTH - GLOBAL_PADDING,
+                cursorY + META_HEIGHT,
+            ),
+            outline=0,
+        )
+
         # [Name]
-        cursorY += DATE_HEIGHT + 5
+        cursorY += META_HEIGHT + 10
         ntb = self._font_name.getbbox(name)
         nt_h = ntb[3] - ntb[1]
         nt_x = ntb[0]
@@ -128,11 +159,11 @@ class Label:
         )
 
         # [Options]
-        cursorY += NAME_HEIGHT + 5
+        cursorY += NAME_HEIGHT + 10
         option_texts = [""]
         for option in options:
             concat_text = (
-                option_texts[-1] + " " + option
+                option_texts[-1] + " / " + option
                 if option_texts[-1] != ""
                 else option
             )
@@ -158,22 +189,6 @@ class Label:
                 fill=0,
             )
             cursorY += OPTIONS_HEIGHT + 5
-
-        # [User]
-        utb = self._font_user.getbbox(user)
-        ut_w = utb[2] - utb[0]
-        ut_h = utb[3] - utb[1]
-        ut_x = utb[0]
-        ut_y = utb[1]
-        draw.text(
-            (
-                WIDTH - GLOBAL_PADDING - ut_x - ut_w,
-                HEIGHT - GLOBAL_PADDING - ut_y - ut_h,
-            ),
-            user,
-            font=self._font_user,
-            fill=0,
-        )
 
         if debug:
             im.show()
