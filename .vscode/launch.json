@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "serve-dev",
+      "type": "python",
+      "program": "main.py",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "DEBUG": "true"
+      }
+    }
+  ]
+}
