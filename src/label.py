@@ -1,5 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw
 import numpy as np
+from datetime import timedelta
 
 from src.define import LabelArgs, IS_DEBUG
 
@@ -96,7 +97,9 @@ class Label:
         # [Meta]
         # Date
         cursorY += TITLE_HEIGHT
-        date_text = args.date.strftime("%Y-%m-%d %H:%M:%S")
+        date_text = (args.date + timedelta(hours=8)).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
         dtb = self._font_date.getbbox(date_text)
         dt_h = dtb[3] - dtb[1]
         dt_x = dtb[0]
