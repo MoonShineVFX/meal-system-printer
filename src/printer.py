@@ -45,7 +45,7 @@ class Printer:
     def _getPrinterVidPid(self):
         wmi = win32com.client.GetObject("winmgmts:")
         for usb in wmi.InstancesOf("Win32_USBHub"):
-            if "列印支援" in usb.Name:
+            if "列印支援" in usb.Name or "Xprinter" in usb.Name:
                 match = re.search(
                     r"VID_(?P<vid>[0-9A-F]{4})&PID_(?P<pid>[0-9A-F]{4})",
                     usb.DeviceID,
