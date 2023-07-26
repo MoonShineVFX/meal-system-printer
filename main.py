@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
+import colorama
 
 load_dotenv()
+colorama.init()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
@@ -21,14 +24,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-worker = Worker()
+# worker = Worker()
 
 
 # API
 @app.post("/api/print")
 async def print(data: List[LabelArgs]):
-    worker.add(data)
+    # worker.add(data)
     return "OK"
+
+
+@app.get("/api/ping")
+async def getPosts():
+    return [
+        {"title": "Hello World", "slug": "hey"},
+        {"title": "Second Post", "slug": "second-post"},
+        {"title": "Third Post", "slug": "third-post"},
+    ]
 
 
 if __name__ == "__main__":
