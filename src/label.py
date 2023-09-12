@@ -48,11 +48,11 @@ class Label:
     ):
         im = Image.new("1", (WIDTH, HEIGHT), 255)
         draw = ImageDraw.Draw(im)
-        cursorY = GLOBAL_PADDING
+        cursor_y = GLOBAL_PADDING
 
         # [Title]
-        # Order ID
-        order_text = f"#{args.order_id}"
+        # Order ID, keep last 3 digits
+        order_text = f"#{str(args.order_id)[-3:]}"
         optb = self._font_order.getbbox(order_text)
         ot_w = optb[2] - optb[0]
         ot_h = optb[3] - optb[1]
@@ -61,16 +61,16 @@ class Label:
         draw.rectangle(
             (
                 GLOBAL_PADDING,
-                cursorY,
+                cursor_y,
                 GLOBAL_PADDING + ot_w + ORDER_PADDING * 2,
-                cursorY + TITLE_HEIGHT,
+                cursor_y + TITLE_HEIGHT,
             ),
             fill=0,
         )
         draw.text(
             (
                 GLOBAL_PADDING - ot_x + ORDER_PADDING,
-                cursorY - ot_y + TITLE_HEIGHT / 2 - ot_h / 2,
+                cursor_y - ot_y + TITLE_HEIGHT / 2 - ot_h / 2,
             ),
             order_text,
             font=self._font_order,
@@ -87,7 +87,7 @@ class Label:
         draw.text(
             (
                 WIDTH - GLOBAL_PADDING - it_x - it_w,
-                cursorY - it_y + TITLE_HEIGHT / 2 - it_h / 2,
+                cursor_y - it_y + TITLE_HEIGHT / 2 - it_h / 2,
             ),
             index_text,
             font=self._font_index,
@@ -96,7 +96,7 @@ class Label:
 
         # [Meta]
         # Date
-        cursorY += TITLE_HEIGHT
+        cursor_y += TITLE_HEIGHT
         date_text = (args.date + timedelta(hours=8)).strftime(
             "%Y-%m-%d %H:%M:%S"
         )
@@ -107,7 +107,7 @@ class Label:
         draw.text(
             (
                 GLOBAL_PADDING + META_PADDING - dt_x,
-                cursorY - dt_y + META_HEIGHT / 2 - dt_h / 2,
+                cursor_y - dt_y + META_HEIGHT / 2 - dt_h / 2,
             ),
             date_text,
             font=self._font_date,
@@ -123,7 +123,7 @@ class Label:
         draw.text(
             (
                 WIDTH - GLOBAL_PADDING - META_PADDING - ut_x - ut_w,
-                cursorY - ut_y + META_HEIGHT / 2 - ut_h / 2,
+                cursor_y - ut_y + META_HEIGHT / 2 - ut_h / 2,
             ),
             args.user,
             font=self._font_user,
@@ -132,15 +132,15 @@ class Label:
         draw.rectangle(
             (
                 GLOBAL_PADDING,
-                cursorY,
+                cursor_y,
                 WIDTH - GLOBAL_PADDING,
-                cursorY + META_HEIGHT,
+                cursor_y + META_HEIGHT,
             ),
             outline=0,
         )
 
         # [Name]
-        cursorY += META_HEIGHT + 10
+        cursor_y += META_HEIGHT + 10
         ntb = self._font_name.getbbox(args.name)
         nt_h = ntb[3] - ntb[1]
         nt_x = ntb[0]
@@ -148,7 +148,7 @@ class Label:
         draw.text(
             (
                 GLOBAL_PADDING - nt_x,
-                cursorY - nt_y + NAME_HEIGHT / 2 - nt_h / 2,
+                cursor_y - nt_y + NAME_HEIGHT / 2 - nt_h / 2,
             ),
             args.name,
             font=self._font_name,
@@ -156,7 +156,7 @@ class Label:
         )
 
         # [Options]
-        cursorY += NAME_HEIGHT + 10
+        cursor_y += NAME_HEIGHT + 10
         option_texts = [""]
         for option in args.options:
             concat_text = (
@@ -179,13 +179,13 @@ class Label:
             draw.text(
                 (
                     GLOBAL_PADDING - opt_x,
-                    cursorY - opt_y + OPTIONS_HEIGHT / 2 - opt_h / 2,
+                    cursor_y - opt_y + OPTIONS_HEIGHT / 2 - opt_h / 2,
                 ),
                 option_text,
                 font=self._font_options,
                 fill=0,
             )
-            cursorY += OPTIONS_HEIGHT + 5
+            cursor_y += OPTIONS_HEIGHT + 5
 
         if IS_DEBUG:
             im.show()
