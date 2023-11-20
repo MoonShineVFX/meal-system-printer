@@ -15,7 +15,6 @@ TITLE_HEIGHT = 45
 META_HEIGHT = 25
 META_PADDING = 5
 DATE_HEIGHT = 18
-USER_HEIGHT = 22
 
 NAME_HEIGHT = 45
 OPTIONS_HEIGHT = 25
@@ -23,8 +22,8 @@ OPTIONS_HEIGHT = 25
 
 class Label:
     def __init__(self):
-        self._font_order = ImageFont.truetype(
-            "fonts/JetBrainsMono-Bold.ttf", TITLE_HEIGHT - ORDER_PADDING
+        self._font_user = ImageFont.truetype(
+            "fonts/NotoSansTC-Regular.otf", TITLE_HEIGHT - ORDER_PADDING
         )
         self._font_date = ImageFont.truetype(
             "fonts/JetBrainsMono-Regular.ttf", DATE_HEIGHT
@@ -38,8 +37,8 @@ class Label:
         self._font_options = ImageFont.truetype(
             "fonts/NotoSansTC-Regular.otf", OPTIONS_HEIGHT
         )
-        self._font_user = ImageFont.truetype(
-            "fonts/NotoSansTC-Regular.otf", DATE_HEIGHT
+        self._font_order = ImageFont.truetype(
+            "fonts/JetBrainsMono-Bold.ttf", DATE_HEIGHT
         )
 
     def make(
@@ -50,30 +49,28 @@ class Label:
         draw = ImageDraw.Draw(im)
         cursor_y = GLOBAL_PADDING
 
-        # [Title]
-        # Order ID, keep last 3 digits
-        order_text = f"#{str(args.order_id)[-3:]}"
-        optb = self._font_order.getbbox(order_text)
-        ot_w = optb[2] - optb[0]
-        ot_h = optb[3] - optb[1]
-        ot_x = optb[0]
-        ot_y = optb[1]
+        # [User]
+        utb = self._font_user.getbbox(args.user)
+        ut_w = utb[2] - utb[0]
+        ut_h = utb[3] - utb[1]
+        ut_x = utb[0]
+        ut_y = utb[1]
         draw.rectangle(
             (
                 GLOBAL_PADDING,
                 cursor_y,
-                GLOBAL_PADDING + ot_w + ORDER_PADDING * 2,
+                GLOBAL_PADDING + ut_w + ORDER_PADDING * 2,
                 cursor_y + TITLE_HEIGHT,
             ),
             fill=0,
         )
         draw.text(
             (
-                GLOBAL_PADDING - ot_x + ORDER_PADDING,
-                cursor_y - ot_y + TITLE_HEIGHT / 2 - ot_h / 2,
+                GLOBAL_PADDING - ut_x + ORDER_PADDING,
+                cursor_y - ut_y + TITLE_HEIGHT / 2 - ut_h / 2,
             ),
-            order_text,
-            font=self._font_order,
+            args.user,
+            font=self._font_user,
             fill=255,
         )
 
@@ -114,21 +111,24 @@ class Label:
             fill=0,
         )
 
-        # [User]
-        utb = self._font_user.getbbox(args.user)
-        ut_w = utb[2] - utb[0]
-        ut_h = utb[3] - utb[1]
-        ut_x = utb[0]
-        ut_y = utb[1]
+        # [Order]
+        # Order ID, keep last 3 digits
+        order_text = f"#{str(args.order_id)[-3:]}"
+        optb = self._font_order.getbbox(order_text)
+        ot_w = optb[2] - optb[0]
+        ot_h = optb[3] - optb[1]
+        ot_x = optb[0]
+        ot_y = optb[1]
         draw.text(
             (
-                WIDTH - GLOBAL_PADDING - META_PADDING - ut_x - ut_w,
-                cursor_y - ut_y + META_HEIGHT / 2 - ut_h / 2,
+                WIDTH - GLOBAL_PADDING - META_PADDING - ot_x - ot_w,
+                cursor_y - ot_y + META_HEIGHT / 2 - ot_h / 2,
             ),
-            args.user,
-            font=self._font_user,
+            order_text,
+            font=self._font_order,
             fill=0,
         )
+        # Date frame
         draw.rectangle(
             (
                 GLOBAL_PADDING,
